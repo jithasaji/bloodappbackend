@@ -29,22 +29,46 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   console.log(" Inside login controller function");
-  const { email,password} = req.body
+  const { email, password } = req.body
   try {
-    const existingUser = await users.findOne({ email , password })
+    const existingUser = await users.findOne({ email, password })
 
     console.log(existingUser);
     if (existingUser) {
-      const token= jwt.sign({userId:existingUser._id},"secretkey123")
+      const token = jwt.sign({ userId: existingUser._id }, "secretkey123")
 
       res.status(200).json({
-        
-        existingUser,token 
+
+        existingUser, token
       })
     } else {
       res.status(404).json("invalid email or password ")
     }
   } catch (error) {
     res.status(401).json(`login API failed!!! ${error}`)
+  }
+}
+
+//get all hospitals
+exports.viewAllHospitals = async (req, res) => {
+  console.log(req.payload,"asdasd")
+  console.log("inside hospital view")
+  try {
+    
+    const getallhospitals = await users.find({ usertype: "Hospital" })
+    if(getallhospitals){
+    res.status(200).json({
+      getallhospitals
+
+    })
+  }else{
+    res.status(406).json("getallhospitals value not found!!!"
+
+    )
+  }
+    
+  }
+  catch (error) {
+    res.status(401).json(`getallhospital Api failed!!!${error}`)
   }
 }
